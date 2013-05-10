@@ -9,12 +9,14 @@ DECLARE_MODULE_V1
 
 static void cs_cmd_countdown(sourceinfo_t *si, int parc, char *parv[]);
 static void cs_cmd_episode(sourceinfo_t *si, int parc, char *parv[]);
+static void cs_cmd_randomep(sourceinfo_t *si, int parc, char *parv[]);
 
 static void write_fimdb(database_handle_t *db);
 static void db_h_fim(database_handle_t *db, const char *type);
 
 command_t cs_episode = { "EPISODE", N_("Manage or view the list of My Little Pony: Friendship is Magic episodes."), PRIV_USER_ADMIN, 5, cs_cmd_episode, { .path = "contrib/cs_episode" } };
 command_t cs_countdown = { "COUNTDOWN", N_("Responds with the time remaining until the next episode of My Little Pony: Friendship is Magic"), AC_NONE, 0, cs_cmd_countdown, { .path = "contrib/cs_countdown" } };
+command_t cs_randomep = { "RANDOMEP", N_("Responds with a name of an episode of My Little Pony: Friendship is Magic for you to watch"), AC_NONE, 0, cs_cmd_randomep, { .path = "contrib/cs_countdown" } };
 
 struct episode_ {
 	char *title;
@@ -42,6 +44,7 @@ void _modinit(module_t *m)
 
 	service_named_bind_command("chanserv", &cs_countdown);
 	service_named_bind_command("chanserv", &cs_episode);
+	service_named_bind_command("chanserv", &cs_randomep);
 }
 
 void _moddeinit(module_unload_intent_t intent)
@@ -52,6 +55,7 @@ void _moddeinit(module_unload_intent_t intent)
 
 	service_named_unbind_command("chanserv", &cs_countdown);
 	service_named_unbind_command("chanserv", &cs_episode);
+	service_named_unbind_command("chanserv", &cs_randomep);
 }
 
 static void write_fimdb(database_handle_t *db)
@@ -84,6 +88,24 @@ static void db_h_fim(database_handle_t *db, const char *type)
 	l->number = number;
 	l->title = sstrdup(title);
 	mowgli_node_add(l, mowgli_node_create(), &cs_episodelist);
+}
+
+static void cs_cmd_randomep(sourceinfo_t *si, int parc, char *parv[])
+{
+	episode_t *toSee;
+
+	int epnum = MOWGLI_LIST_LENGTH(&cs_episodelist) - 1;
+	
+	mowgli_random_t *r = mowgli_random_create_with_seed(time(NULL));
+	
+	int randnum = mowgli_random_int_ranged(r, 0, epnum);
+	
+	toSee = mowgli_node_nth(&cs_episodelist, randnum)->data;
+	
+	service_t *svs = service_find("chanserv");
+	
+	msg(svs->me->nick, si->c->name, "You should watch Season %d Episode %d: %s", 
+	toSee->season, toSee->number, toSee->title);
 }
 
 static void cs_cmd_countdown(sourceinfo_t *si, int parc, char *parv[])
