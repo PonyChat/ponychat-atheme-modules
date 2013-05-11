@@ -28,6 +28,7 @@ struct episode_ {
 typedef struct episode_ episode_t;
 
 mowgli_list_t cs_episodelist;
+mowgli_random_t *r;
 
 void _modinit(module_t *m)
 {
@@ -45,6 +46,8 @@ void _modinit(module_t *m)
 	service_named_bind_command("chanserv", &cs_countdown);
 	service_named_bind_command("chanserv", &cs_episode);
 	service_named_bind_command("chanserv", &cs_randomep);
+	
+	r = mowgli_random_create_with_seed(time(NULL));
 }
 
 void _moddeinit(module_unload_intent_t intent)
@@ -56,6 +59,8 @@ void _moddeinit(module_unload_intent_t intent)
 	service_named_unbind_command("chanserv", &cs_countdown);
 	service_named_unbind_command("chanserv", &cs_episode);
 	service_named_unbind_command("chanserv", &cs_randomep);
+	
+	free(r);
 }
 
 static void write_fimdb(database_handle_t *db)
@@ -95,8 +100,6 @@ static void cs_cmd_randomep(sourceinfo_t *si, int parc, char *parv[])
 	episode_t *toSee;
 
 	int epnum = MOWGLI_LIST_LENGTH(&cs_episodelist) - 1;
-	
-	mowgli_random_t *r = mowgli_random_create_with_seed(time(NULL));
 	
 	int randnum = mowgli_random_int_ranged(r, 0, epnum);
 	
