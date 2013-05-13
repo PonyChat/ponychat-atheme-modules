@@ -9,12 +9,14 @@ DECLARE_MODULE_V1
 
 static void cs_cmd_countdown(sourceinfo_t *si, int parc, char *parv[]);
 static void cs_cmd_episode(sourceinfo_t *si, int parc, char *parv[]);
+static void cs_cmd_shuffle(sourceinfo_t *si, int parc, char *parv[]);
 
 static void write_fimdb(database_handle_t *db);
 static void db_h_fim(database_handle_t *db, const char *type);
 
 command_t cs_episode = { "EPISODE", N_("Manage or view the list of My Little Pony: Friendship is Magic episodes."), PRIV_USER_ADMIN, 5, cs_cmd_episode, { .path = "contrib/cs_episode" } };
 command_t cs_countdown = { "COUNTDOWN", N_("Responds with the time remaining until the next episode of My Little Pony: Friendship is Magic"), AC_NONE, 0, cs_cmd_countdown, { .path = "contrib/cs_countdown" } };
+command_t cs_shuffle = { "SHUFFLE", N_("Responds with the name of a randomly picked episode of My Little Pony: Friendship is Magic"), AC_NONE, 0, cs_cmd_shuffle, { .path = "contrib/cs_shuffle" } };
 
 struct episode_ {
 	char *title;
@@ -26,6 +28,7 @@ struct episode_ {
 typedef struct episode_ episode_t;
 
 mowgli_list_t cs_episodelist;
+mowgli_random_t *r;
 
 void _modinit(module_t *m)
 {
@@ -42,6 +45,9 @@ void _modinit(module_t *m)
 
 	service_named_bind_command("chanserv", &cs_countdown);
 	service_named_bind_command("chanserv", &cs_episode);
+	service_named_bind_command("chanserv", &cs_shuffle);
+	
+	r = mowgli_random_create_with_seed(time(NULL));
 }
 
 void _moddeinit(module_unload_intent_t intent)
@@ -52,6 +58,9 @@ void _moddeinit(module_unload_intent_t intent)
 
 	service_named_unbind_command("chanserv", &cs_countdown);
 	service_named_unbind_command("chanserv", &cs_episode);
+	service_named_unbind_command("chanserv", &cs_shuffle);
+	
+	mowgli_free(r);
 }
 
 static void write_fimdb(database_handle_t *db)
@@ -84,6 +93,31 @@ static void db_h_fim(database_handle_t *db, const char *type)
 	l->number = number;
 	l->title = sstrdup(title);
 	mowgli_node_add(l, mowgli_node_create(), &cs_episodelist);
+}
+
+static void cs_cmd_shuffle(sourceinfo_t *si, int parc, char *parv[])
+{
+	int epnum = MOWGLI_LIST_LENGTH(&cs_episodelist) - 1;
+	int randnum = mowgli_random_int_ranged(r, 0, epnum);
+	
+	if (si->c == NULL)
+        {
+		command_success_nodata(si, _("This command must be used in channels."));
+		return;
+	}
+	
+	episode_t *toSee;
+	mowgli_node_t *episode = mowgli_node_nth(&cs_episodelist, randnum);
+	service_t *svs = service_find("chanserv");
+	
+	if(episode != NULL) {
+		toSee = episode->data;
+	
+		msg(svs->me->nick, si->c->name, "Season %d Episode %d: %s", 
+			toSee->season, toSee->number, toSee->title); 
+	} else {		
+		msg(svs->me->nick, si->c->name, "Oops! The episode lists aren't available right now, please try again later");
+	}
 }
 
 static void cs_cmd_countdown(sourceinfo_t *si, int parc, char *parv[])
@@ -316,3 +350,4 @@ static void cs_cmd_episode(sourceinfo_t *si, int parc, char *parv[])
  * vim:sw=8
  * vim:noexpandtab
  */
+
