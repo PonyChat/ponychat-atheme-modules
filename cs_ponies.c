@@ -110,14 +110,17 @@ static void cs_cmd_shuffle(sourceinfo_t *si, int parc, char *parv[])
 	mowgli_node_t *episode = mowgli_node_nth(&cs_episodelist, randnum);
 	service_t *svs = service_find("chanserv");
 	
-	if(episode != NULL) {
+	if(episode != NULL)
+	{
 		toSee = episode->data;
 	
-		msg(svs->me->nick, si->c->name, "Season %d Episode %d: %s", 
-			toSee->season, toSee->number, toSee->title); 
-	} else {		
-		msg(svs->me->nick, si->c->name, "Oops! The episode lists aren't available right now, please try again later");
+		msg(svs->me->nick, si->c->name, "Season %d Episode %d: \2\"%s\"\2", 
+			toSee->season, toSee->number, toSee->title);
+		return;
 	}
+	
+	msg(svs->me->nick, si->c->name,
+		"There are currently no episodes in the episode database.");
 }
 
 static void cs_cmd_countdown(sourceinfo_t *si, int parc, char *parv[])
