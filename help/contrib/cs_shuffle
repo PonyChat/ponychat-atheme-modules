@@ -1,0 +1,9 @@
+Help for SHUFFLE:
+
+SHUFFLE randomly picks an episode of My Little Pony: Friendship is
+Magic from the services list of episodes.  
+
+Syntax: SHUFFLE
+
+Examples:
+    /msg &nick& SHUFFLE
