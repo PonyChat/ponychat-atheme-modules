@@ -97,18 +97,21 @@ static void db_h_fim(database_handle_t *db, const char *type)
 
 static void cs_cmd_randomep(sourceinfo_t *si, int parc, char *parv[])
 {
-	episode_t *toSee;
-
 	int epnum = MOWGLI_LIST_LENGTH(&cs_episodelist) - 1;
-	
 	int randnum = mowgli_random_int_ranged(r, 0, epnum);
 	
-	toSee = mowgli_node_nth(&cs_episodelist, randnum)->data;
-	
+	episode_t *toSee;
+	mowgli_node_t *episode = mowgli_node_nth(&cs_episodelist, randnum);
 	service_t *svs = service_find("chanserv");
 	
-	msg(svs->me->nick, si->c->name, "Season %d Episode %d: %s", 
-	toSee->season, toSee->number, toSee->title);
+	if(episode != NULL) {
+		toSee = episode->data;
+	
+		msg(svs->me->nick, si->c->name, "Season %d Episode %d: %s", 
+			toSee->season, toSee->number, toSee->title); 
+	} else {		
+		msg(svs->me->nick, si->c->name, "Oops! The episode lists aren't available right now, please try again later");
+	}
 }
 
 static void cs_cmd_countdown(sourceinfo_t *si, int parc, char *parv[])
