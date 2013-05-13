@@ -5,5 +5,5 @@ Magic from the services list of episodes.
 
 Syntax: SHUFFLE
 
-Example:
+Examples:
     /msg &nick& SHUFFLE
