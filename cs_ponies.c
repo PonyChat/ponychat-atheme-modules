@@ -107,7 +107,7 @@ static void cs_cmd_randomep(sourceinfo_t *si, int parc, char *parv[])
 	
 	service_t *svs = service_find("chanserv");
 	
-	msg(svs->me->nick, si->c->name, "You should watch Season %d Episode %d: %s", 
+	msg(svs->me->nick, si->c->name, "Season %d Episode %d: %s", 
 	toSee->season, toSee->number, toSee->title);
 }
 
