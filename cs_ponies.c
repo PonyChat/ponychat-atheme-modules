@@ -100,6 +100,12 @@ static void cs_cmd_shuffle(sourceinfo_t *si, int parc, char *parv[])
 	int epnum = MOWGLI_LIST_LENGTH(&cs_episodelist) - 1;
 	int randnum = mowgli_random_int_ranged(r, 0, epnum);
 	
+	if (si->c == NULL)
+        {
+		command_success_nodata(si, _("This command must be used in channels."));
+		return;
+	}
+	
 	episode_t *toSee;
 	mowgli_node_t *episode = mowgli_node_nth(&cs_episodelist, randnum);
 	service_t *svs = service_find("chanserv");
