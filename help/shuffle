@@ -1,0 +1,11 @@
+Help for SHUFFLE:
+
+SHUFFLE randomly picks an episode of My Little Pony: Friendship is
+Magic from the services list of episodes.  
+
+Syntax: SHUFFLE
+
+Example:
+
+<@Quora> [^_^]: shuffle
+<@[^_^]> Season 2 Episode 25: A Canterlot Wedding, Part 1
