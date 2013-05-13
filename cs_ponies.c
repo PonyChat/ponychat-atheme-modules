@@ -16,7 +16,7 @@ static void db_h_fim(database_handle_t *db, const char *type);
 
 command_t cs_episode = { "EPISODE", N_("Manage or view the list of My Little Pony: Friendship is Magic episodes."), PRIV_USER_ADMIN, 5, cs_cmd_episode, { .path = "contrib/cs_episode" } };
 command_t cs_countdown = { "COUNTDOWN", N_("Responds with the time remaining until the next episode of My Little Pony: Friendship is Magic"), AC_NONE, 0, cs_cmd_countdown, { .path = "contrib/cs_countdown" } };
-command_t cs_randomep = { "RANDOMEP", N_("Responds with a name of an episode of My Little Pony: Friendship is Magic for you to watch"), AC_NONE, 0, cs_cmd_randomep, { .path = "contrib/cs_countdown" } };
+command_t cs_randomep = { "SHUFFLE", N_("Responds with the name of a randomly picked episode of My Little Pony: Friendship is Magic"), AC_NONE, 0, cs_cmd_randomep, { .path = "contrib/cs_countdown" } };
 
 struct episode_ {
 	char *title;
