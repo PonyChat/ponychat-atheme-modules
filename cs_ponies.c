@@ -60,7 +60,7 @@ void _moddeinit(module_unload_intent_t intent)
 	service_named_unbind_command("chanserv", &cs_episode);
 	service_named_unbind_command("chanserv", &cs_randomep);
 	
-	free(r);
+	mowgli_free(r);
 }
 
 static void write_fimdb(database_handle_t *db)
