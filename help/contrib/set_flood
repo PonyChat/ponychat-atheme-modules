@@ -1,0 +1,21 @@
+Help for SET FLOOD:
+
+SET FLOOD configures ChanServ flood control settings. Flood
+control uses two parameters: penalty, and maximum. Every user
+in a channel has a score. The maximum parameter determines
+the maximum score a user can have. Each time a user speaks,
+the penalty is taken away from their score, and the time since
+their last message is added. A user's score is maximised when
+first speaking since joining. If the score drops below zero,
+the configured action is executed. The action parameter can
+be KICK, KICKBAN, or QUIET (if your IRCD supports it).
+
+Flood control can be turned off using the OFF subcommand.
+
+Syntax: SET <#channel> FLOOD <action> <penalty> <maximum>
+Syntax: SET <#channel> FLOOD OFF
+
+Examples:
+    /msg &nick& SET #channel FLOOD kick 2 8
+    /msg &nick& SET #silence FLOOD kickban 10 11
+    /msg &nick& SET #coders FLOOD OFF
