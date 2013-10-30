@@ -14,12 +14,12 @@
 #include "pmodule.h"
 #include "protocol/shadowircd.h"
 
-DECLARE_MODULE_V1("protocol/ponychat-ircd", true, _modinit, NULL, PACKAGE_STRING, "PonyChat Development Group <http://www.ponychat.net>");
+DECLARE_MODULE_V1("protocol/elemental-ircd", true, _modinit, NULL, PACKAGE_STRING, "PonyChat Development Group <http://www.ponychat.net>");
 
 /* *INDENT-OFF* */
 
 ircd_t ponychatircd = {
-        "ponychat-ircd",		/* IRCd name */
+        "elemental-ircd",		/* IRCd name */
         "$$",                           /* TLD Prefix, used by Global. */
         true,                           /* Whether or not we use IRCNet/TS6 UID */
         false,                          /* Whether or not we use RCOMMAND */
@@ -60,16 +60,16 @@ struct cmode_ ponychatircd_mode_list[] = {
   { 'F', CMODE_FTARGET},
   { 'Q', CMODE_DISFWD },
   { 'M', CMODE_IMMUNE },
-  { 'C', CMODE_NOCTCP },		
-  { 'A', CMODE_ADMINONLY },		
-  { 'O', CMODE_OPERONLY },		
-  { 'S', CMODE_SSLONLY },		
-  { 'D', CMODE_NOACTIONS },		
-  { 'T', CMODE_NONOTICE },		
-  { 'G', CMODE_NOCAPS },		
-  { 'E', CMODE_NOKICKS },		
-  { 'd', CMODE_NONICKS },		
-  { 'K', CMODE_NOREPEAT },		
+  { 'C', CMODE_NOCTCP },
+  { 'A', CMODE_ADMINONLY },
+  { 'O', CMODE_OPERONLY },
+  { 'S', CMODE_SSLONLY },
+  { 'D', CMODE_NOACTIONS },
+  { 'T', CMODE_NONOTICE },
+  { 'G', CMODE_NOCAPS },
+  { 'E', CMODE_NOKICKS },
+  { 'd', CMODE_NONICKS },
+  { 'K', CMODE_NOREPEAT },
   { 'J', CMODE_KICKNOREJOIN },
   { '\0', 0 }
 };
