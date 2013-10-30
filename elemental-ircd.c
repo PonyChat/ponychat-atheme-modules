@@ -14,12 +14,12 @@
 #include "pmodule.h"
 #include "protocol/shadowircd.h"
 
-DECLARE_MODULE_V1("protocol/ponychat-ircd", true, _modinit, NULL, PACKAGE_STRING, "PonyChat Development Group <http://www.ponychat.net>");
+DECLARE_MODULE_V1("protocol/elemental-ircd", true, _modinit, NULL, PACKAGE_STRING, "PonyChat Development Group <http://www.ponychat.net>");
 
 /* *INDENT-OFF* */
 
-ircd_t ponychatircd = {
-        "ponychat-ircd",		/* IRCd name */
+ircd_t elemental_ircd = {
+        "elemental-ircd",		/* IRCd name */
         "$$",                           /* TLD Prefix, used by Global. */
         true,                           /* Whether or not we use IRCNet/TS6 UID */
         false,                          /* Whether or not we use RCOMMAND */
@@ -44,7 +44,7 @@ ircd_t ponychatircd = {
 	IRCD_CIDR_BANS | IRCD_HOLDNICK  /* Flags */
 };
 
-struct cmode_ ponychatircd_mode_list[] = {
+struct cmode_ elemental_mode_list[] = {
   { 'i', CMODE_INVITE },
   { 'm', CMODE_MOD    },
   { 'n', CMODE_NOEXT  },
@@ -74,7 +74,7 @@ struct cmode_ ponychatircd_mode_list[] = {
   { '\0', 0 }
 };
 
-struct cmode_ ponychatircd_status_mode_list[] = {
+struct cmode_ elemental_status_mode_list[] = {
   { 'y', CSTATUS_OWNER },
   { 'a', CSTATUS_PROTECT },
   { 'o', CSTATUS_OP    },
@@ -83,7 +83,7 @@ struct cmode_ ponychatircd_status_mode_list[] = {
   { '\0', 0 }
 };
 
-struct cmode_ ponychatircd_prefix_mode_list[] = {
+struct cmode_ elemental_prefix_mode_list[] = {
   { '~', CSTATUS_OWNER },
   { '!', CSTATUS_PROTECT },
   { '@', CSTATUS_OP    },
@@ -92,7 +92,7 @@ struct cmode_ ponychatircd_prefix_mode_list[] = {
   { '\0', 0 }
 };
 
-struct cmode_ ponychatircd_user_mode_list[] = {
+struct cmode_ elemental_user_mode_list[] = {
   { 'a', UF_ADMIN    },
   { 'i', UF_INVIS    },
   { 'o', UF_IRCOP    },
@@ -106,12 +106,12 @@ void _modinit(module_t * m)
 {
 	MODULE_TRY_REQUEST_DEPENDENCY(m, "protocol/charybdis");
 
-	mode_list = ponychatircd_mode_list;
-	user_mode_list = ponychatircd_user_mode_list;
-	status_mode_list = ponychatircd_status_mode_list;
-	prefix_mode_list = ponychatircd_prefix_mode_list;
+	mode_list = elemental_mode_list;
+	user_mode_list = elemental_user_mode_list;
+	status_mode_list = elemental_status_mode_list;
+	prefix_mode_list = elemental_prefix_mode_list;
 
-	ircd = &ponychatircd;
+	ircd = &elemental_ircd;
 
 	m->mflags = MODTYPE_CORE;
 
