@@ -205,10 +205,10 @@ static void hs_cmd_faq(sourceinfo_t *si, int parc, char *parv[])
 			{
 				if (in_channel)
 					msg(svs->me->nick, si->c->name,
-							"\2%s:\2 %s",
+							"\2%s\2: %s",
 							faq->name, faq->contents);
 				else
-					command_success_nodata(si, "\2%s:\2 %s",
+					command_success_nodata(si, "\2%s\2: %s",
 							faq->name, faq->contents);
 
 				return;
