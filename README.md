@@ -20,8 +20,8 @@ next episode of My Little Pony: Friendship is Magic airs, and a SHUFFLE command
 to allow users to randomly pick an episode of My Little Pony: Friendship is
 Magic to watch.
 
-## ponychat-ircd
+## elemental-ircd
 
-An Atheme protocol module for our ircd [ponychat-ircd]
-(http://github.com/PonyChat/ponychat-ircd) that supports our channel owner mode.
+An Atheme protocol module for our IRC daemon,
+[elemental-ircd](http://github.com/PonyChat/elemental-ircd).
 
