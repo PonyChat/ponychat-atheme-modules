@@ -88,6 +88,9 @@ static void hs_cmd_faq(sourceinfo_t *si, int parc, char *parv[])
 
 	if (si->c != NULL)
         {
+		if (strcasecmp(si->c->name, "#help") && strcasecmp(si->c->name, "#opers"))
+			return;
+
 		++in_channel;
 	}
 
