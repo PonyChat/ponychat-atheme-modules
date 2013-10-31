@@ -1,0 +1,12 @@
+Help for FAQ:
+
+Maintain a list of frequently asked questions and retrieve them in private or
+in a channel.
+
+Syntax: FAQ ADD <name> <contents> | DEL <name> | LIST | <name>
+
+Examples:
+    /msg &nick& FAQ ADD register-nick To register, type ...
+    /msg &nick& FAQ DEL register-nick
+    /msg &nick& FAQ LIST
+    /msg &nick& FAQ register-nick
