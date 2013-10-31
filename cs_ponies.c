@@ -15,7 +15,7 @@ static void write_fimdb(database_handle_t *db);
 static void db_h_fim(database_handle_t *db, const char *type);
 
 command_t cs_episode = { "EPISODE", N_("Manage or view the list of My Little Pony: Friendship is Magic episodes."), PRIV_USER_ADMIN, 5, cs_cmd_episode, { .path = "contrib/cs_episode" } };
-command_t cs_countdown = { "COUNTDOWN", N_("Responds with the time remaining until the next episode of My Little Pony: Friendship is Magic"), AC_NONE, 0, cs_cmd_countdown, { .path = "contrib/cs_countdown" } };
+command_t cs_countdown = { "COUNTDOWN", N_("Responds with the time remaining until the next episode of My Little Pony: Friendship is Magic"), AC_NONE, 3, cs_cmd_countdown, { .path = "contrib/cs_countdown" } };
 command_t cs_shuffle = { "SHUFFLE", N_("Responds with the name of a randomly picked episode of My Little Pony: Friendship is Magic"), AC_NONE, 0, cs_cmd_shuffle, { .path = "contrib/cs_shuffle" } };
 
 struct episode_ {
@@ -126,7 +126,6 @@ static void cs_cmd_shuffle(sourceinfo_t *si, int parc, char *parv[])
 static void cs_cmd_countdown(sourceinfo_t *si, int parc, char *parv[])
 {
 	char buf[BUFSIZE];
-	char strfbuf[32];
 	struct tm tm;
 	mowgli_node_t *n;
 	episode_t *l;
@@ -138,38 +137,69 @@ static void cs_cmd_countdown(sourceinfo_t *si, int parc, char *parv[])
 	size_t i = 0;
 
 	if (si->c == NULL)
-        {
 		return;
-	}
+
+	/* TODO: this whole thing sucks -- rewrite */
 
 	service_t *svs = service_find("chanserv");
 
-
-	MOWGLI_ITER_FOREACH(n, cs_episodelist.head)
+	if (parc == 3)
 	{
-		l = n->data;
-
-		++i;
-
-		if (CURRTIME > l->air_ts)
-			continue;
-
-		diff = l->air_ts - CURRTIME;
-
-
-		slog(LG_DEBUG, "cs_cmd_countdown(): N: %d D: %d L: %d A: %d S: %d E: %d",
-			CURRTIME, diff, last_diff, l->air_ts, l->season, l->number);
-
-		if (diff < last_diff)
+		unsigned short int season_i = atoi(parv[1]);
+		unsigned short int episode_i = atoi(parv[2]);
+		
+		MOWGLI_ITER_FOREACH(n, cs_episodelist.head)
 		{
+			l = n->data;
 
-			last_diff = diff;
-			target_node = i - 1;
-			found = true;
+			++i;
 
-			slog(LG_DEBUG, "cs_cmd_countdown(): New target selected: %d",
-				target_node);
+			if (l->season == season_i && l->number == episode_i)
+			{
+				found = true;
+				target_node = i - 1;
+				break;
+			}
 		}
+
+		if (!found)
+			msg(svs->me->nick, si->c->name,
+					"Air time of season %d episode %d is unknown",
+					season_i, episode_i);
+	}
+	else
+	{
+		MOWGLI_ITER_FOREACH(n, cs_episodelist.head)
+		{
+			l = n->data;
+
+			++i;
+
+			if (CURRTIME > l->air_ts)
+				continue;
+
+			diff = l->air_ts - CURRTIME;
+
+
+			slog(LG_DEBUG, "cs_cmd_countdown(): N: %d D: %d L: %d A: %d S: %d E: %d",
+					CURRTIME, diff, last_diff, l->air_ts, l->season, l->number);
+
+			if (diff < last_diff)
+			{
+
+				last_diff = diff;
+				target_node = i - 1;
+				found = true;
+
+				slog(LG_DEBUG, "cs_cmd_countdown(): New target selected: %d",
+						target_node);
+			}
+
+		}
+
+		if (!found)
+			msg(svs->me->nick, si->c->name,
+					"Next episode air time is unknown.");
 
 	}
 
@@ -179,23 +209,27 @@ static void cs_cmd_countdown(sourceinfo_t *si, int parc, char *parv[])
 		l = n->data;
 
 		tm = *gmtime(&l->air_ts);
+		diff = l->air_ts - CURRTIME;
 
-		unsigned int days = last_diff / 60 / 60 / 24;
-		unsigned int hours = last_diff / 60 / 60 % 24;
-		unsigned int minutes = last_diff /60 % 60;
-		unsigned int seconds = last_diff % 60;
+		unsigned int weeks 	= abs(diff / 60 / 60 / 24 / 7);
+		unsigned int days 	= abs(diff / 60 / 60 / 24 % 7);
+		unsigned int hours 	= abs(diff / 60 / 60 % 24);
+		unsigned int minutes 	= abs(diff /60 % 60);
+		unsigned int seconds 	= abs(diff % 60);
 
-		strftime(strfbuf, sizeof(strfbuf) - 1, TIME_FORMAT, &tm);
-	
-		msg(svs->me->nick, si->c->name,
-			"Episode %d of season %d \2\"%s\"\2 airs in %d days, %d hours, %d minutes, %d seconds (%s UTC)",
-			l->number, l->season, l->title, days, hours, minutes, seconds, strfbuf);
+		strftime(buf, BUFSIZE, TIME_FORMAT, &tm);
+
+		if (diff < 0)
+			msg(svs->me->nick, si->c->name,
+					"Episode %d of season %d \2\"%s\"\2 aired %d weeks, %d days, %d hours, %d minutes, %d seconds ago (%s UTC)",
+					l->number, l->season, l->title, weeks, days, hours, minutes, seconds, buf);
+		else
+			msg(svs->me->nick, si->c->name,
+					"Episode %d of season %d \2\"%s\"\2 airs in %d weeks, %d days, %d hours, %d minutes, %d seconds (%s UTC)",
+					l->number, l->season, l->title, weeks, days, hours, minutes, seconds, buf);
 
 		return;
 	}
-
-	msg(svs->me->nick, si->c->name,
-		"Next episode air time is unknown.");
 
 	return;
 }
