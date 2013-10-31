@@ -4,6 +4,10 @@ PonyChat maintains several custom Atheme modules. These are largely useless and
 full of hacks, but we wanted to have them visible regardless. Use at your own
 risk.
 
+## hs_faq
+
+FAQ database for HelpServ.
+
 ## cs_flood
 
 Our custom antiflood module. It is configured by using ChanServ SET FLOOD.
