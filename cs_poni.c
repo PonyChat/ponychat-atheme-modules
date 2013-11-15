@@ -2,15 +2,15 @@
 
 DECLARE_MODULE_V1
 (
-	"contrib/cs_poni", false, _modinit, _moddeinit,
-	PACKAGE_STRING,
-	"PonyChat Network <https://ponychat.net>"
-);
+ "contrib/cs_poni", false, _modinit, _moddeinit,
+ PACKAGE_STRING,
+ "PonyChat Network <https://ponychat.net>"
+):w;
 
 static void cs_cmd_poni(sourceinfo_t *si, int parc, char *parv[]);
 
 command_t cs_poni = { "PONI", "Verifies network ponies by responding with poni.",
-			AC_NONE, 0, cs_cmd_poni, { .path = "contrib/cs_poni" } };
+	AC_NONE, 0, cs_cmd_poni, { .path = "contrib/cs_poni" } };
 
 void _modinit(module_t *m)
 {
