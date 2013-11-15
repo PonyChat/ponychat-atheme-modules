@@ -7,9 +7,9 @@
 
 DECLARE_MODULE_V1
 (
-	"contrib/cs_flood", false, _modinit, _moddeinit,
-	PACKAGE_STRING,
-	"Atheme Development Group <http://www.atheme.net>"
+ "contrib/cs_flood", false, _modinit, _moddeinit,
+ PACKAGE_STRING,
+ "Atheme Development Group <http://www.atheme.net>"
 );
 
 #define PARAMS_META "flood"
@@ -262,7 +262,7 @@ static void do_quiet(user_t *u, channel_t *c)
 	mowgli_strlcat(hostbuf, u->vhost, BUFSIZE);
 
 	slog(LG_INFO, "FLOOD: QUIET \2%s\2 on \2%s\2",
-	     hostbuf, c->name);
+			hostbuf, c->name);
 
 	cb = place_quietmask(c, MTYPE_ADD, hostbuf);
 }
@@ -308,18 +308,18 @@ static void on_channel_message(hook_cmessage_data_t *data)
 	fs->score = 0;
 
 	switch (fp->action) {
-	case FLOOD_ACTION_KICKBAN:
-		ban(chansvs.me->me, mc->chan, data->u);
-	case FLOOD_ACTION_KICK:
-		slog(LG_INFO, "FLOOD: KICK%s \2%s!%s@%s\2 on \2%s\2",
-		     fp->action == FLOOD_ACTION_KICK ? "" : "BAN",
-		     data->u->nick, data->u->user, data->u->vhost, data->c->name);
-		try_kick(chansvs.me->me, mc->chan, data->u, "Flooding");
-		break;
+		case FLOOD_ACTION_KICKBAN:
+			ban(chansvs.me->me, mc->chan, data->u);
+		case FLOOD_ACTION_KICK:
+			slog(LG_INFO, "FLOOD: KICK%s \2%s!%s@%s\2 on \2%s\2",
+					fp->action == FLOOD_ACTION_KICK ? "" : "BAN",
+					data->u->nick, data->u->user, data->u->vhost, data->c->name);
+			try_kick(chansvs.me->me, mc->chan, data->u, "Flooding");
+			break;
 
-	case FLOOD_ACTION_QUIET:
-		do_quiet(data->u, mc->chan);
-		break;
+		case FLOOD_ACTION_QUIET:
+			do_quiet(data->u, mc->chan);
+			break;
 	}
 }
 
@@ -363,7 +363,7 @@ static char get_action(char *act)
 	if (!strcasecmp(act, "QUIET") && place_quietmask)
 		return FLOOD_ACTION_QUIET;
 	/*
-	only because BAN makes *no sense*
+	   only because BAN makes *no sense*
 	if (!strcasecmp(act, "BAN"))
 		return FLOOD_ACTION_BAN;
 	*/
@@ -411,7 +411,7 @@ static void cs_set_cmd_flood(sourceinfo_t *si, int parc, char *parv[])
 
 	for (s=parv[1]; *s; s++)
 		*s = toupper(*s);
-		
+
 	fp.action = get_action(parv[1]);
 	fp.penalty = strtof(parv[2], NULL);
 	fp.max = strtof(parv[3], NULL);

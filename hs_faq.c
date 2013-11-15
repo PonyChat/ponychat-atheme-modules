@@ -2,9 +2,9 @@
 
 DECLARE_MODULE_V1
 (
-	"contrib/hs_faq", true, _modinit, _moddeinit,
-	PACKAGE_STRING,
-	"PonyChat Network <http://ponychat.net/>"
+ "contrib/hs_faq", true, _modinit, _moddeinit,
+ PACKAGE_STRING,
+ "PonyChat Network <http://ponychat.net/>"
 );
 
 static void hs_cmd_faq(sourceinfo_t *si, int parc, char *parv[]);
@@ -87,7 +87,7 @@ static void hs_cmd_faq(sourceinfo_t *si, int parc, char *parv[])
 	unsigned int in_channel = 0;
 
 	if (si->c != NULL)
-        {
+	{
 		if (strcasecmp(si->c->name, "#help") && strcasecmp(si->c->name, "#opers"))
 			return;
 
@@ -191,7 +191,7 @@ static void hs_cmd_faq(sourceinfo_t *si, int parc, char *parv[])
 			faq = n->data;
 
 			command_success_nodata(si, "\2%s:\2 %s",
-				faq->name, faq->contents);
+					faq->name, faq->contents);
 		}
 		command_success_nodata(si, "End of list.");
 		logcommand(si, CMDLOG_GET, "FAQ:LIST");
