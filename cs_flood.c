@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013 Alex Iadicico <alex -at- ajitek.net>
+ * Copyright (c) 2013 Alex Iadicicco <alex -at- ajitek.net>
  * Rights to this code are as documented in doc/LICENSE.
  */
 
