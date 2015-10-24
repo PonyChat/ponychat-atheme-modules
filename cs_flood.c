@@ -273,6 +273,8 @@ static void on_channel_message(hook_cmessage_data_t *data)
 	struct floodparams *fp;
 	struct floodscore *fs;
 	struct timeval tv, now;
+	chanuser_t *cu;
+
 	float diff;
 
 	if (mc == NULL)
@@ -302,6 +304,31 @@ static void on_channel_message(hook_cmessage_data_t *data)
 
 	if (fs->score > 0)
 		return;
+
+	/*
+	* If the user has channel access, let them flood as they wish.
+	*/
+	cu = chanuser_find(data->c, data->u);
+	if (cu == NULL) {
+		return; // avoid invalid membership pointer
+	}
+
+	// Status checks
+	if (cu->modes & CSTATUS_VOICE) {
+		return;
+	}
+	if (cu->modes & CSTATUS_OP) {
+		return;
+	}
+	if (ircd->uses_halfops && (cu->modes & ircd->halfops_mode)) {
+		return;
+	}
+	if (ircd->uses_protect && (cu->modes & ircd->protect_mode)) {
+		return;
+	}
+	if (ircd->uses_owner && (cu->modes & ircd->owner_mode)) {
+		return;
+	}
 
 	/* user is flooding */
 
