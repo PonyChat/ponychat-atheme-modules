@@ -269,7 +269,7 @@ static void do_quiet(user_t *u, channel_t *c)
 
 static void on_channel_message(hook_cmessage_data_t *data)
 {
-	mychan_t *mc = MYCHAN_FROM(data->c);
+	mychan_t *mc = mychan_from(data->c);
 	struct floodparams *fp;
 	struct floodscore *fs;
 	struct timeval tv, now;
@@ -325,7 +325,7 @@ static void on_channel_message(hook_cmessage_data_t *data)
 
 static void on_channel_part(hook_channel_joinpart_t *data)
 {
-	mychan_t *mc = MYCHAN_FROM(data->cu->chan);
+	mychan_t *mc = mychan_from(data->cu->chan);
 	user_t *u = data->cu->user;
 	mowgli_patricia_t *scores;
 	struct floodscore *fs;
@@ -484,7 +484,7 @@ void _moddeinit(module_unload_intent_t intent)
 
 	/* move to another function? */
 	MOWGLI_PATRICIA_FOREACH(c, &iter, chanlist) {
-		mc = MYCHAN_FROM(c);
+		mc = mychan_from(c);
 		if (mc != NULL)
 			flood_clear(mc, false);
 	}
